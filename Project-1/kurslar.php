@@ -1,7 +1,5 @@
 <?php require_once('config.php')?>  
 
-<?php include('partials/_header.php')?>
-
 <?php 
 
 $result_kategoriler = mysqli_query($baglanti,"SELECT * FROM kategoriler");
@@ -11,6 +9,8 @@ $kurslar = mysqli_fetch_all($result_kurslar,MYSQLI_ASSOC);
 mysqli_close($baglanti);
  
 ?>
+
+<?php include('partials/_header.php')?>
 
 <body>
     <?php include('partials/_navbar.php')?>
@@ -22,8 +22,9 @@ mysqli_close($baglanti);
         </div>
         <div class="col-9">
         <?php foreach($kurslar as $kurs):?>
-            <?php if($kurs["onay"] and  $kurs["anasayfa"]):?>
-                <?php include('partials/_kurs.php')?>   
+
+          <?php if($kurs["onay"]):?>
+                <?php include('partials/_kurs.php')?>
                 <?php endif;?>
                 <?php endforeach;?>
             </div>
