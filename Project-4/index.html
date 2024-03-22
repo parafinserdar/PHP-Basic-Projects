@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #imageContainer {
+            text-align: center;
+            margin: 20px;
+        }
+
+        img {
+            max-width: 400px;
+            max-height: 400px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+    <title>Resim Galerisi</title>
+</head>
+<body>
+
+<div id="imageContainer">
+    <button onclick="prevImage()">Onceki</button>
+    <img id="mainImage" src="images/resim1.png" alt="Image 1">
+    <button onclick="nextImage()">Sonraki</button>
+</div>
+
+<script>
+    var currentImageIndex = 1;
+    var totalImages = 10;
+
+    function showImage(index) {
+        var imageElement = document.getElementById('mainImage');
+        imageElement.src ='images/'+'resim' + index + '.png';
+    }
+
+    function prevImage() {
+        currentImageIndex = (currentImageIndex === 1) ? totalImages : currentImageIndex - 1;
+        showImage(currentImageIndex);
+    }
+
+    function nextImage() {
+        currentImageIndex = (currentImageIndex === totalImages) ? 1 : currentImageIndex + 1;
+        showImage(currentImageIndex);
+    }
+</script>
+
+</body>
+</html>
