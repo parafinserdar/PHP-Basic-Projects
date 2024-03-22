@@ -1,65 +1,57 @@
 <?php
-class OgrenciKayit {
-    private $ogrenciler = array();
+session_start();
 
-    public function __construct() {
-        // Eğer daha önce çerez varsa, öğrenci bilgilerini çerezden al
-        if(isset($_COOKIE['ogrenciler'])) {
-            $this->ogrenciler = json_decode($_COOKIE['ogrenciler'], true);
-        }
+// Yeni öğrenci ekleme işlemi
+if(isset($_POST['submit'])) {
+    $ad = $_POST['ad'];
+    $soyad = $_POST['soyad'];
 
-        // Eğer form gönderilmişse yeni öğrenciyi ekleyerek çerez güncelle
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->ekleOgrenci($_POST['ad'], $_POST['soyad']);
-            $this->guncelleCerez();
-        }
+    // Yeni öğrenciyi oturum değişkenine ekle
+    if(!isset($_SESSION['ogrenciler'])) {
+        $_SESSION['ogrenciler'] = array();
     }
 
-    private function ekleOgrenci($ad, $soyad) {
-        $this->ogrenciler[] = array('ad' => $ad, 'soyad' => $soyad);
-    }
-
-    private function guncelleCerez() {
-        // Öğrenci bilgilerini çerezde sakla (bir gün boyunca)
-        setcookie('ogrenciler', json_encode($this->ogrenciler), time() + (86400 * 1), "/");
-    }
-
-    public function listeleOgrenciler() {
-        echo "<ul>";
-        foreach ($this->ogrenciler as $ogrenci) {
-            echo "<li>{$ogrenci['ad']} {$ogrenci['soyad']}</li>";
-        }
-        echo "</ul>";
-    }
+    $_SESSION['ogrenciler'][] = array('ad' => $ad, 'soyad' => $soyad);
 }
 
-// OgrenciKayit sınıfını kullanarak işlemleri gerçekleştir
-$ogrenciKayit = new OgrenciKayit();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Öğrenci Ekleme</title>
+    <title>Öğrenci Ekleme Formu</title>
 </head>
 <body>
+
     <h2>Öğrenci Ekleme Formu</h2>
-    <form method="post" action="">
+
+    <form method="post" action="ekle.php">
         <label for="ad">Ad:</label>
-        <input type="text" name="ad" required>
+        <input type="text" id="ad" name="ad" required><br>
 
         <label for="soyad">Soyad:</label>
-        <input type="text" name="soyad" required>
+        <input type="text" id="soyad" name="soyad" required><br>
 
-        <button type="submit">Ekle</button>
+        <input type="submit" name="submit" value="Öğrenci Ekle">
     </form>
 
     <h2>Eklenen Öğrenciler</h2>
+
     <?php
-    // Eklenen öğrencileri listeleyerek göster
-    $ogrenciKayit->listeleOgrenciler();
+    // Daha önce eklenen öğrencileri listeleyin
+    if(isset($_SESSION['ogrenciler']) && count($_SESSION['ogrenciler']) > 0) {
+        echo '<ul>';
+        foreach ($_SESSION['ogrenciler'] as $ogrenci) {
+            echo '<li>' . $ogrenci['ad'] . ' ' . $ogrenci['soyad'] . '</li>';
+        }
+        echo '</ul>';
+    } else {
+        echo 'Henüz öğrenci eklenmedi.';
+    }
     ?>
+
 </body>
 </html>
